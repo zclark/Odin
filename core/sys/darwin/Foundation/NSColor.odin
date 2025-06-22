@@ -6,6 +6,34 @@ ColorSpace :: struct {using _: Object}
 @(objc_class="NSColor")
 Color :: struct {using _: Object}
 
+// Window Colors (tested)
+@(objc_type=Color, objc_name="windowBackgroundColor", objc_is_class_method=true)
+Color_windowBackgroundColor :: proc "c" () -> ^Color {
+	return msgSend(^Color, Color, "windowBackgroundColor")
+}
+@(objc_type=Color, objc_name="windowFrameTextColor", objc_is_class_method=true)
+Color_windowFrameTextColor :: proc "c" () -> ^Color {
+	return msgSend(^Color, Color, "windowFrameTextColor")
+}
+@(objc_type=Color, objc_name="underPageBackgroundColor", objc_is_class_method=true)
+Color_underPageBackgroundColor :: proc "c" () -> ^Color {
+	return msgSend(^Color, Color, "underPageBackgroundColor")
+}
+
+// Highlights and Shadows (tested)
+@(objc_type=Color, objc_name="findHighlightColor", objc_is_class_method=true)
+Color_findHighlightColor :: proc "c" () -> ^Color {
+	return msgSend(^Color, Color, "findHighlightColor")
+}
+@(objc_type=Color, objc_name="highlightColor", objc_is_class_method=true)
+Color_highlightColor :: proc "c" () -> ^Color {
+	return msgSend(^Color, Color, "highlightColor")
+}
+@(objc_type=Color, objc_name="shadowColor", objc_is_class_method=true)
+Color_shadowColor :: proc "c" () -> ^Color {
+	return msgSend(^Color, Color, "shadowColor")
+}
+
 @(objc_type=Color, objc_name="colorWithSRGBRed", objc_is_class_method=true)
 Color_colorWithSRGBRed :: proc "c" (red, green, blue, alpha: Float) -> ^Color {
 	return msgSend(^Color, Color, "colorWithSRGBRed:green:blue:alpha:", red, green, blue, alpha)
@@ -146,4 +174,22 @@ Color_numberOfComponents :: proc "c" (self: ^Color) -> Integer {
 @(objc_type=Color, objc_name="getComponents")
 Color_getComponents :: proc "c" (self: ^Color, components: [^]Float) {
 	msgSend(nil, self, "getComponents:", components)
+}
+
+// Drawing with Colors (untested)
+@(objc_type=Color, objc_name="drawSwatchInRect")
+Color_drawSwatchInRect :: proc "c" (self: ^Color, rect: Rect) {
+	msgSend(nil, self, "drawSwatchInRect:", rect)
+}
+@(objc_type=Color, objc_name="set")
+Color_set :: proc "c" (self: ^Color) {
+	msgSend(nil, self, "set")
+}
+@(objc_type=Color, objc_name="setFill")
+Color_setFill :: proc "c" (self: ^Color) {
+	msgSend(nil, self, "setFill")
+}
+@(objc_type=Color, objc_name="setStroke")
+Color_setStroke :: proc "c" (self: ^Color) {
+	msgSend(nil, self, "setStroke")
 }

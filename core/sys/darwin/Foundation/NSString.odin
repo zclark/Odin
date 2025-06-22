@@ -143,3 +143,18 @@ String_stringByAppendingString :: proc "c" (self, other: ^String) -> ^String {
 String_rangeOfString :: proc "c" (self, other: ^String, options: StringCompareOptions) -> Range {
 	return msgSend(Range, self, "rangeOfString:options:", other, options)
 }
+
+@(objc_class="NSAttributedString")
+AttributedString :: struct {using _: Object}
+@(objc_type=AttributedString, objc_name="alloc", objc_is_class_method=true)
+AttributedString_alloc :: proc "c" () -> ^AttributedString {
+	return msgSend(^AttributedString, AttributedString, "alloc")
+}
+@(objc_type=AttributedString, objc_name="initWithString")
+AttributedString_initWithString :: proc "c" (self: ^AttributedString, str: ^String) -> ^AttributedString {
+	return msgSend(^AttributedString, self, "initWithString:", str)
+}
+@(objc_type=AttributedString, objc_name="string")
+AttributedString_string :: proc "c" (self: ^AttributedString) -> ^String {
+	return msgSend(^String, self, "string")
+}

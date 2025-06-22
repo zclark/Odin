@@ -9,6 +9,13 @@ Rect :: struct {
 	using size: Size,
 }
 
+foreign import "system:Foundation.framework"
+
+@(default_calling_convention="c", link_prefix="NS")
+foreign Foundation {
+	RectFill :: proc(rect: Rect) ---
+}
+
 Depth :: enum UInteger {
 	onehundredtwentyeightBitRGB = 544,
 	sixtyfourBitRGB             = 528,
@@ -594,46 +601,6 @@ Layer_addSublayer :: proc "c" (self: ^Layer, layer: ^Layer) {
 	msgSend(nil, self, "addSublayer:", layer)
 }
 
-@(objc_class="NSResponder")
-Responder :: struct {using _: Object}
-
-@(objc_class="NSView")
-View :: struct {using _: Responder}
-
-
-@(objc_type=View, objc_name="initWithFrame")
-View_initWithFrame :: proc "c" (self: ^View, frame: Rect) -> ^View {
-	return msgSend(^View, self, "initWithFrame:", frame)
-}
-@(objc_type=View, objc_name="bounds")
-View_bounds :: proc "c" (self: ^View) -> Rect {
-	return msgSend(Rect, self, "bounds")
-}
-@(objc_type=View, objc_name="layer")
-View_layer :: proc "c" (self: ^View) -> ^Layer {
-	return msgSend(^Layer, self, "layer")
-}
-@(objc_type=View, objc_name="setLayer")
-View_setLayer :: proc "c" (self: ^View, layer: ^Layer) {
-	msgSend(nil, self, "setLayer:", layer)
-}
-@(objc_type=View, objc_name="wantsLayer")
-View_wantsLayer :: proc "c" (self: ^View) -> BOOL {
-	return msgSend(BOOL, self, "wantsLayer")
-}
-@(objc_type=View, objc_name="setWantsLayer")
-View_setWantsLayer :: proc "c" (self: ^View, wantsLayer: BOOL) {
-	msgSend(nil, self, "setWantsLayer:", wantsLayer)
-}
-@(objc_type=View, objc_name="convertPointFromView")
-View_convertPointFromView :: proc "c" (self: ^View, point: Point, view: ^View) -> Point {
-	return msgSend(Point, self, "convertPoint:fromView:", point, view)
-}
-@(objc_type=View, objc_name="addSubview")
-View_addSubview :: proc "c" (self: ^View, view: ^View) {
-	msgSend(nil, self, "addSubview:", view)
-}
-
 @(objc_class="NSWindow")
 Window :: struct {using _: Responder}
 
@@ -931,6 +898,32 @@ Window_parentWindow :: proc "c" (self: ^Window) -> ^Window {
 // There is a setter for parentWindow, but omitting due to the documentation:
 // This property should be set from a subclass when it is overridden by a subclass’s implementation. It should not be set otherwise.
 
+// Drawing Windows (untested)
+@(objc_type=Window, objc_name="display")
+Window_display :: proc "c" (self: ^Window) {
+	msgSend(nil, self, "display")
+}
+@(objc_type=Window, objc_name="displayIfNeeded")
+Window_displayIfNeeded :: proc "c" (self: ^Window) {
+	msgSend(nil, self, "displayIfNeeded")
+}
+@(objc_type=Window, objc_name="viewsNeedDisplay")
+Window_viewsNeedDisplay :: proc "c" (self: ^Window) -> BOOL {
+	return msgSend(BOOL, self, "viewsNeedDisplay")
+}
+@(objc_type=Window, objc_name="setViewsNeedDisplay")
+Window_setViewsNeedDisplay :: proc "c" (self: ^Window, need: BOOL) {
+	msgSend(BOOL, self, "setViewsNeedDisplay:", need)
+}
+@(objc_type=Window, objc_name="allowsConcurrentViewDrawing")
+Window_allowsConcurrentViewDrawing :: proc "c" (self: ^Window) -> BOOL {
+	return msgSend(BOOL, self, "allowsConcurrentViewDrawing")
+}
+@(objc_type=Window, objc_name="setAllowsConcurrentViewDrawing")
+Window_setAllowsConcurrentViewDrawing :: proc "c" (self: ^Window, allow: BOOL) {
+	msgSend(nil, self, "setAllowsConcurrentViewDrawing:", allow)
+}
+
 // Managing Titles
 @(objc_type=Window, objc_name="title")
 Window_title :: proc "c" (self: ^Window) -> ^String {
@@ -1146,4 +1139,41 @@ NSWindow_setFrameAutosaveName :: proc "c" (self: ^Window, name: ^String) {
 @(objc_type=Window, objc_name="performWindowDragWithEvent")
 Window_performWindowDragWithEvent :: proc "c" (self: ^Window, event: ^Event) {
 	msgSend(nil, self, "performWindowDragWithEvent:", event)
+}
+
+// Handling Events (untested), TODO: Do these have to be "c" and then can we union them into 1 called
+// nextEvent?
+@(objc_type=Window, objc_name="currentEvent")
+Window_currentEvent :: proc "c" (self: ^Window) -> ^Event {
+	return msgSend(^Event, self, "currentEvent")
+}
+@(objc_type=Window, objc_name="nextEventMatchingMask")
+Window_nextEventMatchingMask :: proc "c" (self: ^Window, mask: EventMask) -> ^Event {
+	return msgSend(^Event, self, "nextEventMatchingMask:", mask)
+}
+@(objc_type=Window, objc_name="nextEventMatchingMaskUntilDateInModeDequeue")
+Window_nextEventMatchingMaskUntilDateInModeDequeue :: proc "c" (self: ^Window, mask: EventMask, expiration: ^Date, mode: RunLoopMode, dequeue: BOOL) -> ^Event {
+	return msgSend(^Event, self, "nextEventMatchingMask:untilDate:inMode:dequeue:", mask, expiration, mode, dequeue)
+}
+@(objc_type=Window, objc_name="discardEventsMatchingMaskBeforeEvent")
+Window_discardEventsMatchingMaskBeforeEvent :: proc "c" (self: ^Window, mask: EventMask, last: ^Event) {
+	msgSend(nil, self, "discardEventsMatchingMask:beforeEvent:", mask, last)
+}
+@(objc_type=Window, objc_name="postEventAtStart")
+Window_postEventAtStart :: proc "c" (self: ^Window, event: ^Event, at_start: BOOL) {
+	msgSend(nil, self, "postEvent:atStart:", event, at_start)
+}
+@(objc_type=Window, objc_name="sendEvent")
+Window_sendEvent :: proc "c" (self: ^Window, event: ^Event) {
+	msgSend(nil, self, "sendEvent:", event)
+}
+@(objc_type=Window, objc_name="tryToPerformWith")
+Window_tryToPerformWith :: proc "c" (self: ^Window, action: SEL, obj: id) -> BOOL {
+	return msgSend(BOOL, self, "tryToPerform:with:", action, obj)
+}
+
+// Deprecated Methods (actually doesn't work on OSX 15)
+@(objc_type=Window, objc_name="flushWindow")
+Window_flushWindow :: proc "c" (self: ^Window) {
+	msgSend(nil, self, "flushWindow")
 }

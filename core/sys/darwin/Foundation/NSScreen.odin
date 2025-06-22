@@ -3,11 +3,11 @@ package objc_Foundation
 @(objc_class="NSScreen")
 Screen :: struct {using _: Object}
 
-@(objc_type=Screen, objc_name="mainScreen")
+@(objc_type=Screen, objc_name="mainScreen", objc_is_class_method=true)
 Screen_mainScreen :: proc "c" () -> ^Screen {
 	return msgSend(^Screen, Screen, "mainScreen")
 }
-@(objc_type=Screen, objc_name="deepestScreen")
+@(objc_type=Screen, objc_name="deepestScreen", objc_is_class_method=true)
 Screen_deepestScreen :: proc "c" () -> ^Screen {
 	return msgSend(^Screen, Screen, "deepestScreen")
 }

@@ -18,6 +18,14 @@ msgSendSafeCheck :: proc "c" (obj: ^Object, selector: SEL) -> BOOL {
 @(objc_class="NSObject")
 Object :: struct {using _: intrinsics.objc_object}
 
+@(objc_class="NSResponder")
+Responder :: struct {using _: Object}
+
+@(objc_type=Responder, objc_name="interpretKeyEvents")
+Responder_interpretKeyEvents :: proc "c" (self: ^Responder, events: ^Array) {
+	msgSend(nil, self, "interpretKeyEvents:", events)
+}
+
 @(objc_class="NSObject")
 Copying :: struct($T: typeid) {using _: Object}
 
@@ -56,6 +64,10 @@ retainCount :: proc "c" (self: ^Object) -> UInteger {
 @(objc_type=Object, objc_name="class")
 class :: proc "c" (self: ^Object) -> Class {
 	return msgSend(Class, self, "class")
+}
+@(objc_type=Object, objc_name="isKindOfClass")
+isKindOfClass :: proc "c" (self: ^Object, class: Class) -> BOOL {
+	return msgSend(BOOL, self, "isKindOfClass:", class)
 }
 
 @(objc_type=Object, objc_name="hash")
